@@ -12,6 +12,8 @@ and call them. Run the offline unit tests as you go:
 
 from __future__ import annotations
 
+from collections.abc import Mapping
+
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
@@ -25,8 +27,7 @@ def build_echo(message: str) -> dict:
 
     Must return exactly ``{"echo": <message>, "length": <len of message>}``.
     """
-    # TODO: return {"echo": message, "length": len(message)}
-    raise NotImplementedError("Phase 1: implement build_echo()")
+    return {"echo": message, "length": len(message)}
 
 
 def extract_message(args, json_body) -> str | None:
@@ -39,9 +40,11 @@ def extract_message(args, json_body) -> str | None:
         args: request.args (a mapping with ``.get``), e.g. ``{"msg": "hi"}``.
         json_body: parsed JSON body or ``None``, e.g. ``{"message": "hi"}``.
     """
-    # TODO: return args["msg"] if present, else json_body["message"] if present,
-    #       else None. Use .get() so missing keys don't raise.
-    raise NotImplementedError("Phase 1: implement extract_message()")
+    message = args.get("msg") if isinstance(args, Mapping) else None
+    if isinstance(message, str):
+        return message
+    message = json_body.get("message") if isinstance(json_body, Mapping) else None
+    return message if isinstance(message, str) else None
 
 
 # --------------------------------------------------------------------------- #

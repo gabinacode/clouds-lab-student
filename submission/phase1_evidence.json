@@ -1,0 +1,731 @@
+{
+  "project": "project-80ae182a-7f1d-4d03-927",
+  "region": "us-central1",
+  "zone": "us-central1-a",
+  "urls": {
+    "vm": "http://34.63.40.9:8080",
+    "cloudrun": "https://echo-bot-qkffifxhpa-uc.a.run.app",
+    "function": "https://us-central1-project-80ae182a-7f1d-4d03-927.cloudfunctions.net/echo"
+  },
+  "correctness_checks": {
+    "vm": [
+      {
+        "method": "GET",
+        "path": "/echo?msg=a8b1581827d14a35807ff18fe873834c",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "GET",
+        "path": "/echo?msg=",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo?msg=query",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "GET",
+        "path": "/echo",
+        "status": 400,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 400,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 400,
+        "correct": true
+      }
+    ],
+    "cloudrun": [
+      {
+        "method": "GET",
+        "path": "/echo?msg=9a87bb02f1054afcab8d9137c0e1ccc2",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "GET",
+        "path": "/echo?msg=",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo?msg=query",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "GET",
+        "path": "/echo",
+        "status": 400,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 400,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 400,
+        "correct": true
+      }
+    ],
+    "function": [
+      {
+        "method": "GET",
+        "path": "/echo?msg=26e9e993f21348b89a4f9a60859d99f7",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "GET",
+        "path": "/echo?msg=",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo?msg=query",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 200,
+        "correct": true
+      },
+      {
+        "method": "GET",
+        "path": "/echo",
+        "status": 400,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 400,
+        "correct": true
+      },
+      {
+        "method": "POST",
+        "path": "/echo",
+        "status": 400,
+        "correct": true
+      }
+    ]
+  },
+  "idle_started_at_utc": "2026-10-27T14:13:19.594044+00:00",
+  "image": {
+    "tag": "us-central1-docker.pkg.dev/project-80ae182a-7f1d-4d03-927/eurecomgpt/echo-bot:v1",
+    "digest": "sha256:e3885dae85255fcb72fe203fa7827f426bdb6b0720f8b20d406a517a6f639547",
+    "registry_size_bytes": 50249893,
+    "registry_size_mb": 50.249893,
+    "vm_uncompressed_size_bytes": 136659632
+  },
+  "vm": {
+    "name": "echo-vm",
+    "machine_type": "e2-micro",
+    "image": [
+      "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-12-bookworm"
+    ],
+    "vpc": "echo-net",
+    "subnet": "echo-subnet",
+    "disk_gb": "10",
+    "service_account": "echo-vm-pull@project-80ae182a-7f1d-4d03-927.iam.gserviceaccount.com",
+    "debian_image": "debian-12-bookworm-v20261023",
+    "disk_type": "pd-standard",
+    "firewall": {
+      "http_port": 8080,
+      "http_source": "0.0.0.0/0",
+      "ssh_port": 22,
+      "ssh_source": "35.235.240.0/20",
+      "target_tag": "echo-http"
+    },
+    "container_command": [
+      "gunicorn",
+      "--bind",
+      "0.0.0.0:8080",
+      "--workers",
+      "1",
+      "--threads",
+      "8",
+      "app:app"
+    ],
+    "container_restart_policy": "unless-stopped",
+    "boot_disk_auto_delete": true,
+    "memory_mib": 1024,
+    "shared_vcpus": 2,
+    "image_digest": "sha256:e3885dae85255fcb72fe203fa7827f426bdb6b0720f8b20d406a517a6f639547"
+  },
+  "cloudrun": {
+    "name": "echo-bot",
+    "revision": "echo-bot-00001-c78",
+    "image_digest": "us-central1-docker.pkg.dev/project-80ae182a-7f1d-4d03-927/eurecomgpt/echo-bot@sha256:e3885dae85255fcb72fe203fa7827f426bdb6b0720f8b20d406a517a6f639547",
+    "template": {
+      "containerConcurrency": 8,
+      "containers": [
+        {
+          "image": "us-central1-docker.pkg.dev/project-80ae182a-7f1d-4d03-927/eurecomgpt/echo-bot:v1",
+          "ports": [
+            {
+              "containerPort": 8080,
+              "name": "http1"
+            }
+          ],
+          "resources": {
+            "limits": {
+              "cpu": "1",
+              "memory": "256Mi"
+            }
+          },
+          "startupProbe": {
+            "failureThreshold": 1,
+            "periodSeconds": 240,
+            "tcpSocket": {
+              "port": 8080
+            },
+            "timeoutSeconds": 240
+          }
+        }
+      ],
+      "serviceAccountName": "echo-runtime@project-80ae182a-7f1d-4d03-927.iam.gserviceaccount.com",
+      "timeoutSeconds": 300
+    },
+    "scaling": {
+      "autoscaling.knative.dev/maxScale": "3",
+      "run.googleapis.com/client-name": "gcloud",
+      "run.googleapis.com/client-version": "590.0.0",
+      "run.googleapis.com/startup-cpu-boost": "true"
+    },
+    "service_annotations": {
+      "run.googleapis.com/client-name": "gcloud",
+      "run.googleapis.com/client-version": "590.0.0",
+      "run.googleapis.com/ingress": "all",
+      "run.googleapis.com/ingress-status": "all",
+      "run.googleapis.com/maxScale": "3",
+      "run.googleapis.com/operation-id": "84d609f4-3382-40b3-9b1b-7d516f26c56f",
+      "run.googleapis.com/urls": "[\"https://echo-bot-321318688734.us-central1.run.app\",\"https://echo-bot-qkffifxhpa-uc.a.run.app\"]",
+      "serving.knative.dev/creator": "gabin.bruniaux@eurecom.fr",
+      "serving.knative.dev/lastModifier": "gabin.bruniaux@eurecom.fr"
+    },
+    "minimum_instances": 0,
+    "public_invocation_verified": true
+  },
+  "function": {
+    "name": "echo",
+    "environment": "GEN_2",
+    "runtime": "python311",
+    "entry_point": "echo",
+    "build": "projects/321318688734/locations/us-central1/builds/93d734b1-4215-49e9-b5e7-57109fd8705f",
+    "service_config": {
+      "allTrafficOnLatestRevision": true,
+      "availableCpu": "1",
+      "availableMemory": "256Mi",
+      "environmentVariables": {
+        "LOG_EXECUTION_ID": "true"
+      },
+      "ingressSettings": "ALLOW_ALL",
+      "maxInstanceCount": 3,
+      "maxInstanceRequestConcurrency": 8,
+      "revision": "echo-00001-fiz",
+      "service": "projects/project-80ae182a-7f1d-4d03-927/locations/us-central1/services/echo",
+      "serviceAccountEmail": "echo-runtime@project-80ae182a-7f1d-4d03-927.iam.gserviceaccount.com",
+      "timeoutSeconds": 60,
+      "uri": "https://echo-qkffifxhpa-uc.a.run.app"
+    },
+    "minimum_instances": 0,
+    "public_invocation_verified": true
+  },
+  "budget": {
+    "currency": "EUR",
+    "amount": 0.01,
+    "threshold_percent": 100,
+    "scope": "this project",
+    "verified": true,
+    "is_hard_spending_limit": false,
+    "default_email_recipients_enabled": true,
+    "account_holder_billing_role": "roles/billing.admin",
+    "recipient_account": "gabin.bruniaux@eurecom.fr"
+  },
+  "cloud_build_image_build": "cca776e2-a36f-413a-ae86-8d402c21c286",
+  "gcloud_run_services_list": {
+    "command": "gcloud run services list",
+    "stdout": "✔\nSERVICE: echo\nREGION: us-central1\nURL: https://echo-321318688734.us-central1.run.app\nLAST DEPLOYED BY: service-321318688734@gcf-admin-robot.iam.gserviceaccount.com\nLAST DEPLOYED AT: 2026-10-27T14:11:33.804392Z\n\n✔\nSERVICE: echo-bot\nREGION: us-central1\nURL: https://echo-bot-321318688734.us-central1.run.app\nLAST DEPLOYED BY: gabin.bruniaux@eurecom.fr\nLAST DEPLOYED AT: 2026-10-27T14:12:15.894205Z\n",
+    "stderr": ""
+  },
+  "workflow_upstream_commit": "21f9abf5e845cbb070cafe5451e82e0d16e5f695",
+  "cleanup_pending": [
+    "echo-vm and its ephemeral external IPv4 / auto-delete boot disk",
+    "Cloud Run echo-bot",
+    "gen-2 function echo and its backing Cloud Run service",
+    "allow-echo-8080 and allow-echo-ssh",
+    "echo-subnet and echo-net",
+    "Phase 1 images/build cache in eurecomgpt",
+    "function source/upload objects in the two gcf-v2 staging buckets",
+    "echo-build, echo-runtime and echo-vm-pull service accounts and their lab IAM grants"
+  ],
+  "source_checksums": {
+    "phase-0-setup/verify_setup.py": "66b40b5b92a79ade79e683c440dda05a8c9378b9b1d8ea73505de4de6947ed24",
+    "phase-1-echo-bot/app.py": "4b83441ec7dfc86fd0934699d0ca702fe5f52784e02087d09d8f033ef922d8d3",
+    "phase-1-echo-bot/main.py": "52c5c40562df79b44f42c7b593b37feaa8bd9f812e712bd77c6c267a47e5a51b",
+    "phase-1-echo-bot/Dockerfile": "4d9356bbbf6083c64f21c134856653454b3cd306ed4f08649366992738c3291d",
+    "phase-1-echo-bot/requirements.txt": "eab51389e7deacd788c0b41d43b577311dc61149b1824866005b24084fe703ed",
+    "phase-1-echo-bot/measure.py": "dce2755f4cd53db7beecfa2a47679bbbf611d9b0463366476fdde673363bf51c"
+  },
+  "measurement": {
+    "started_at_utc": "2026-10-27T14:35:33.328879+00:00",
+    "completed_at_utc": "2026-10-27T14:35:54.896988+00:00",
+    "idle_seconds": 1333.734835,
+    "command": [
+      "/home/gabin_bruniaux/clouds-lab-student/.venv/bin/python",
+      "phase-1-echo-bot/measure.py",
+      "--vm",
+      "http://34.63.40.9:8080",
+      "--cloudrun",
+      "https://echo-bot-qkffifxhpa-uc.a.run.app",
+      "--function",
+      "https://us-central1-project-80ae182a-7f1d-4d03-927.cloudfunctions.net/echo"
+    ],
+    "pre_measurement_instance_counts": {
+      "checked_at_utc": "2026-10-27T14:35:31.893495+00:00",
+      "latest_series": [
+        {
+          "resource": {
+            "type": "cloud_run_revision",
+            "labels": {
+              "service_name": "echo",
+              "configuration_name": "echo",
+              "revision_name": "echo-00001-fiz",
+              "location": "us-central1",
+              "project_id": "project-80ae182a-7f1d-4d03-927"
+            }
+          },
+          "metric": {
+            "labels": {
+              "state": "active"
+            },
+            "type": "run.googleapis.com/container/instance_count"
+          },
+          "latest_point": {
+            "interval": {
+              "startTime": "2026-10-27T14:35:00Z",
+              "endTime": "2026-10-27T14:35:00Z"
+            },
+            "value": {
+              "int64Value": "0"
+            }
+          }
+        },
+        {
+          "resource": {
+            "type": "cloud_run_revision",
+            "labels": {
+              "configuration_name": "echo",
+              "revision_name": "echo-00001-fiz",
+              "location": "us-central1",
+              "service_name": "echo",
+              "project_id": "project-80ae182a-7f1d-4d03-927"
+            }
+          },
+          "metric": {
+            "labels": {
+              "state": "idle"
+            },
+            "type": "run.googleapis.com/container/instance_count"
+          },
+          "latest_point": {
+            "interval": {
+              "startTime": "2026-10-27T14:35:00Z",
+              "endTime": "2026-10-27T14:35:00Z"
+            },
+            "value": {
+              "int64Value": "0"
+            }
+          }
+        },
+        {
+          "resource": {
+            "type": "cloud_run_revision",
+            "labels": {
+              "revision_name": "echo-bot-00001-c78",
+              "service_name": "echo-bot",
+              "location": "us-central1",
+              "project_id": "project-80ae182a-7f1d-4d03-927",
+              "configuration_name": "echo-bot"
+            }
+          },
+          "metric": {
+            "labels": {
+              "state": "active"
+            },
+            "type": "run.googleapis.com/container/instance_count"
+          },
+          "latest_point": {
+            "interval": {
+              "startTime": "2026-10-27T14:35:00Z",
+              "endTime": "2026-10-27T14:35:00Z"
+            },
+            "value": {
+              "int64Value": "0"
+            }
+          }
+        },
+        {
+          "resource": {
+            "type": "cloud_run_revision",
+            "labels": {
+              "location": "us-central1",
+              "project_id": "project-80ae182a-7f1d-4d03-927",
+              "configuration_name": "echo-bot",
+              "revision_name": "echo-bot-00001-c78",
+              "service_name": "echo-bot"
+            }
+          },
+          "metric": {
+            "labels": {
+              "state": "idle"
+            },
+            "type": "run.googleapis.com/container/instance_count"
+          },
+          "latest_point": {
+            "interval": {
+              "startTime": "2026-10-27T14:35:00Z",
+              "endTime": "2026-10-27T14:35:00Z"
+            },
+            "value": {
+              "int64Value": "0"
+            }
+          }
+        }
+      ],
+      "instance_totals": {
+        "echo-bot": 0,
+        "echo": 0
+      }
+    },
+    "initial_instance_counts": {
+      "checked_at_utc": "2026-10-27T14:15:46.219491+00:00",
+      "time_series": [
+        {
+          "metric": {
+            "labels": {
+              "state": "active"
+            },
+            "type": "run.googleapis.com/container/instance_count"
+          },
+          "resource": {
+            "type": "cloud_run_revision",
+            "labels": {
+              "location": "us-central1",
+              "revision_name": "echo-00001-fiz",
+              "project_id": "project-80ae182a-7f1d-4d03-927",
+              "service_name": "echo",
+              "configuration_name": "echo"
+            }
+          },
+          "metricKind": "GAUGE",
+          "valueType": "INT64",
+          "points": [
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:15:00Z",
+                "endTime": "2026-10-27T14:15:00Z"
+              },
+              "value": {
+                "int64Value": "0"
+              }
+            },
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:14:00Z",
+                "endTime": "2026-10-27T14:14:00Z"
+              },
+              "value": {
+                "int64Value": "1"
+              }
+            },
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:13:00Z",
+                "endTime": "2026-10-27T14:13:00Z"
+              },
+              "value": {
+                "int64Value": "0"
+              }
+            },
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:12:00Z",
+                "endTime": "2026-10-27T14:12:00Z"
+              },
+              "value": {
+                "int64Value": "1"
+              }
+            }
+          ]
+        },
+        {
+          "metric": {
+            "labels": {
+              "state": "idle"
+            },
+            "type": "run.googleapis.com/container/instance_count"
+          },
+          "resource": {
+            "type": "cloud_run_revision",
+            "labels": {
+              "service_name": "echo",
+              "location": "us-central1",
+              "configuration_name": "echo",
+              "revision_name": "echo-00001-fiz",
+              "project_id": "project-80ae182a-7f1d-4d03-927"
+            }
+          },
+          "metricKind": "GAUGE",
+          "valueType": "INT64",
+          "points": [
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:15:00Z",
+                "endTime": "2026-10-27T14:15:00Z"
+              },
+              "value": {
+                "int64Value": "1"
+              }
+            },
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:14:00Z",
+                "endTime": "2026-10-27T14:14:00Z"
+              },
+              "value": {
+                "int64Value": "0"
+              }
+            },
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:13:00Z",
+                "endTime": "2026-10-27T14:13:00Z"
+              },
+              "value": {
+                "int64Value": "1"
+              }
+            },
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:12:00Z",
+                "endTime": "2026-10-27T14:12:00Z"
+              },
+              "value": {
+                "int64Value": "0"
+              }
+            }
+          ]
+        },
+        {
+          "metric": {
+            "labels": {
+              "state": "active"
+            },
+            "type": "run.googleapis.com/container/instance_count"
+          },
+          "resource": {
+            "type": "cloud_run_revision",
+            "labels": {
+              "project_id": "project-80ae182a-7f1d-4d03-927",
+              "configuration_name": "echo-bot",
+              "location": "us-central1",
+              "revision_name": "echo-bot-00001-c78",
+              "service_name": "echo-bot"
+            }
+          },
+          "metricKind": "GAUGE",
+          "valueType": "INT64",
+          "points": [
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:15:00Z",
+                "endTime": "2026-10-27T14:15:00Z"
+              },
+              "value": {
+                "int64Value": "0"
+              }
+            },
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:14:00Z",
+                "endTime": "2026-10-27T14:14:00Z"
+              },
+              "value": {
+                "int64Value": "1"
+              }
+            },
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:13:00Z",
+                "endTime": "2026-10-27T14:13:00Z"
+              },
+              "value": {
+                "int64Value": "1"
+              }
+            }
+          ]
+        },
+        {
+          "metric": {
+            "labels": {
+              "state": "idle"
+            },
+            "type": "run.googleapis.com/container/instance_count"
+          },
+          "resource": {
+            "type": "cloud_run_revision",
+            "labels": {
+              "service_name": "echo-bot",
+              "project_id": "project-80ae182a-7f1d-4d03-927",
+              "location": "us-central1",
+              "revision_name": "echo-bot-00001-c78",
+              "configuration_name": "echo-bot"
+            }
+          },
+          "metricKind": "GAUGE",
+          "valueType": "INT64",
+          "points": [
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:15:00Z",
+                "endTime": "2026-10-27T14:15:00Z"
+              },
+              "value": {
+                "int64Value": "1"
+              }
+            },
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:14:00Z",
+                "endTime": "2026-10-27T14:14:00Z"
+              },
+              "value": {
+                "int64Value": "0"
+              }
+            },
+            {
+              "interval": {
+                "startTime": "2026-10-27T14:13:00Z",
+                "endTime": "2026-10-27T14:13:00Z"
+              },
+              "value": {
+                "int64Value": "0"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "startup_logs": [
+      {
+        "service": "echo",
+        "timestamp": "2026-10-27T14:35:51.316723Z",
+        "message": "Default STARTUP TCP probe succeeded after 1 attempt for container \"worker\" on port 8080."
+      },
+      {
+        "service": "echo",
+        "timestamp": "2026-10-27T14:35:49.936148Z",
+        "message": "Starting new instance. Reason: AUTOSCALING - Instance started due to configured scaling factors (e.g. CPU utilization, request throughput, etc.) or no existing capacity for current traffic."
+      },
+      {
+        "service": "echo",
+        "timestamp": "2026-10-27T14:35:49.006087Z",
+        "message": "Default STARTUP TCP probe succeeded after 1 attempt for container \"worker\" on port 8080."
+      },
+      {
+        "service": "echo",
+        "timestamp": "2026-10-27T14:35:48.330153Z",
+        "message": "Starting new instance. Reason: AUTOSCALING - Instance started due to configured scaling factors (e.g. CPU utilization, request throughput, etc.) or no existing capacity for current traffic."
+      },
+      {
+        "service": "echo-bot",
+        "timestamp": "2026-10-27T14:35:40.669635Z",
+        "message": "Default STARTUP TCP probe succeeded after 1 attempt for container \"echo-bot-1\" on port 8080."
+      },
+      {
+        "service": "echo-bot",
+        "timestamp": "2026-10-27T14:35:38.044300Z",
+        "message": "Starting new instance. Reason: AUTOSCALING - Instance started due to configured scaling factors (e.g. CPU utilization, request throughput, etc.) or no existing capacity for current traffic."
+      }
+    ]
+  },
+  "public_tests": {
+    "phase0": {
+      "passed": 9,
+      "score": 60,
+      "max_score": 60,
+      "unit_passed": 5,
+      "unit_score": 40,
+      "unit_max_score": 40
+    },
+    "phase1": {
+      "passed": 13,
+      "score": 85,
+      "max_score": 85,
+      "unit_passed": 6,
+      "unit_score": 45,
+      "unit_max_score": 45
+    }
+  },
+  "final_verification_at_utc": "2026-10-27T14:38:01.182479+00:00",
+  "git_handoff": {
+    "branch": "main",
+    "head_before_manual_submission": "8e5b7b107e9c7769ed7e98c30900c60a53d13402",
+    "staged_changes": false,
+    "commit_executed": false,
+    "push_executed": false,
+    "github_cli_authenticated": false,
+    "local_git_author_identity_configured": false
+  }
+}

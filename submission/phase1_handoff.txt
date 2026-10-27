@@ -1,0 +1,133 @@
+EurecomGPT Lab 1 — manual submission and cleanup handoff
+
+Deadline: 27 October 2026, 23:59 Europe/Paris (22:59 UTC).
+Project: project-80ae182a-7f1d-4d03-927. Region: us-central1. Zone: us-central1-a.
+
+Verified completion
+-------------------
+Phase 0: both parsers implemented; 5 unit tests / 9 full public tests pass, 60/60.
+Phase 1: both helpers and Dockerfile implemented; 6 unit tests / 13 full public
+tests pass, 85/85, including live GET and POST on all three deployments.
+The unchanged measurement script ran once with all three URLs after 22.23 minutes
+without deliberate endpoint traffic. Monitoring confirmed both serverless services
+at zero instances beforehand; system logs show new instance starts during the run.
+There are 20 genuine warm samples per platform, with their original tail spikes.
+
+                        First request (ms)    Warm median (ms)
+VM (already running)                253.1               212.4
+Cloud Run                          4326.1               136.1
+Gen-2 function                      915.0               131.2
+
+Image echo-bot:v1: 50.249893 MB compressed, 136.659632 MB unpacked on the VM.
+VM and Cloud Run use the same registry digest. The function is built from source.
+All seven workflow definitions exactly match official commit
+21f9abf5e845cbb070cafe5451e82e0d16e5f695; all YAML validates, and there is no
+nested .github/workflows/workflows directory. Direct file retrieval avoided the
+archive extraction issue; no --strip-components=2 command was used.
+
+Reports: phase0_report.json, phase1_report.json, phase1_report.md.
+Additional deployment, timing, scale-to-zero and test evidence: phase1_evidence.json.
+
+GitHub is unchanged. Nothing was staged, committed, tagged or pushed.
+Local branch is main, still at 8e5b7b107e9c7769ed7e98c30900c60a53d13402.
+The latest remote Phase 0 and Phase 1 runs are the old failed initial-commit runs
+from 20 October. No run testing these local changes has been triggered.
+Updating all seven workflow files will also trigger the unfinished later phases
+on your first push; their skeleton failures do not replace Phase 0/1 results.
+
+Manual publication
+------------------
+Git author/committer identity is currently unset and gh is not authenticated.
+The commands below prompt for YOUR chosen identity for this single commit and do
+not change persistent Git authorship settings. You must authenticate yourself.
+Execute these commands personally, only after reviewing the changes:
+
+cd /home/gabin_bruniaux/clouds-lab-student
+git branch --show-current
+git status --short
+git diff --check
+git diff
+cat submission/phase0_report.json submission/phase1_report.json submission/phase1_report.md submission/phase1_evidence.json submission/phase1_handoff.txt
+
+git add phase-0-setup/verify_setup.py phase-1-echo-bot/app.py phase-1-echo-bot/Dockerfile .github/workflows/*.yml submission/phase0_report.json submission/phase1_report.json submission/phase1_report.md submission/phase1_evidence.json submission/phase1_handoff.txt
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+read -r -p 'Your Git author name: ' lab_author_name
+read -r -p 'Your Git author email: ' lab_author_email
+git -c user.name="$lab_author_name" -c user.email="$lab_author_email" commit -m "Complete EurecomGPT Lab 1 phases 0 and 1"
+gh auth login --hostname github.com --git-protocol https
+git push origin main
+
+Then list the NEW runs for the commit you just pushed:
+
+gh run list --commit "$(git rev-parse HEAD)" --limit 10
+
+Once the new runs appear, watch each required workflow and require a successful
+exit status. Do not use the old initial-commit runs as evidence:
+
+for lab_workflow in phase-0-setup.yml phase-1-echo-bot.yml; do
+    lab_run_id=$(gh run list --workflow "$lab_workflow" --commit "$(git rev-parse HEAD)" --json databaseId --jq '.[0].databaseId')
+    gh run watch "$lab_run_id" --exit-status || break
+done
+
+Verify both entries say completed / success:
+
+gh run list --commit "$(git rev-parse HEAD)" --json name,status,conclusion,url
+
+Actions pages:
+https://github.com/gabinacode/clouds-lab-student/actions/workflows/phase-0-setup.yml
+https://github.com/gabinacode/clouds-lab-student/actions/workflows/phase-1-echo-bot.yml
+
+Shared document submission (you must edit it manually)
+----------------------------------------------------
+Add https://github.com/gabinacode/clouds-lab-student beside your email address in:
+https://docs.google.com/document/d/1SQC4mMz88ZA9fjD6QMrdh3csxUNTWQbpf2jkzCrMHx8/edit
+
+Cloud resources remain available
+--------------------------------
+VM: http://34.63.40.9:8080
+Cloud Run: https://echo-bot-qkffifxhpa-uc.a.run.app
+Function: https://us-central1-project-80ae182a-7f1d-4d03-927.cloudfunctions.net/echo
+
+Resources created for the lab:
+- Artifact Registry eurecomgpt, echo-bot:v1, function image and function build cache.
+- echo-net, echo-subnet (10.10.0.0/24), allow-echo-8080 and allow-echo-ssh.
+- echo-vm: e2-micro, Debian 12, one 10 GB pd-standard auto-delete boot disk,
+  ephemeral external IPv4; Docker container echo-bot restarts unless stopped.
+- Cloud Run echo-bot and gen-2 function echo (backed by Cloud Run service echo).
+  Each has minimum 0, maximum 3, concurrency 8, 1 vCPU and 256 MiB RAM.
+- echo-vm-pull, echo-runtime and echo-build service accounts, with scoped IAM.
+- Automatically created function source/upload buckets:
+  gcf-v2-sources-321318688734-us-central1
+  gcf-v2-uploads-321318688734.us-central1.cloudfunctions.appspot.com
+- Required APIs plus Budget, IAM and IAP APIs for the alert and restricted SSH.
+- A project-scoped EUR 0.01 monthly budget, 100% actual-spend alert, default
+  billing-admin email delivery enabled. This is an alert, NOT a spending limit.
+
+The VM's external IPv4 incurs charges while it remains allocated. Storage,
+builds and requests count toward billing-account quotas. Keep all three endpoints
+up until the new Phase 1 workflow passes and you explicitly authorize cleanup.
+No deployment has been deleted or manually stopped.
+
+After BOTH required workflows pass, return with the commit SHA and explicitly say:
+"Phase 0 and Phase 1 passed for this commit. I authorize cleanup of the Phase 1
+resources created during this session."
+
+Cleanup must target only these lab resources. Keep the budget alert. Inspect
+registry and staging-bucket contents before deleting images, caches or source
+objects, because future phases may reuse these repositories or buckets. Preserve unrelated
+infrastructure, including the default network and default service accounts.
+
+After authorized cleanup, verify the actual inventory:
+
+gcloud compute instances list --project=project-80ae182a-7f1d-4d03-927
+gcloud compute disks list --project=project-80ae182a-7f1d-4d03-927
+gcloud compute addresses list --project=project-80ae182a-7f1d-4d03-927
+gcloud run services list --project=project-80ae182a-7f1d-4d03-927
+gcloud functions list --project=project-80ae182a-7f1d-4d03-927
+gcloud artifacts docker images list us-central1-docker.pkg.dev/project-80ae182a-7f1d-4d03-927/eurecomgpt --include-tags --project=project-80ae182a-7f1d-4d03-927
+gcloud storage buckets list --project=project-80ae182a-7f1d-4d03-927
+
+Check Billing > Reports for this project, grouped by SKU. Billing data can lag;
+resource inventory and actual billing reports together establish what remains.

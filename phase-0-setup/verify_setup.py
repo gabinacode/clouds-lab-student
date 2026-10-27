@@ -21,8 +21,10 @@ so you can test them without touching the cloud — see ``tests/test_units.py``.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 # Make the shared `autograder` package importable when run from anywhere.
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -48,10 +50,18 @@ def parse_gcloud_config(raw: str) -> dict:
     Args:
         raw: the raw stdout string from the gcloud command (may be empty).
     """
-    # TODO: parse `raw` as JSON and return {"account": ..., "project": ...}
-    #       from the "core" section. Return empty strings if raw is empty or a
-    #       field is missing.
-    raise NotImplementedError("Phase 0: implement parse_gcloud_config()")
+    result = {"account": "", "project": ""}
+    try:
+        config = json.loads(raw)
+    except (ValueError, TypeError):
+        return result
+    core = config.get("core") if isinstance(config, dict) else None
+    if isinstance(core, dict):
+        for field in result:
+            value = core.get(field)
+            if isinstance(value, str):
+                result[field] = value
+    return result
 
 
 def parse_repo_slug(remote_url: str) -> str:
@@ -67,9 +77,33 @@ def parse_repo_slug(remote_url: str) -> str:
     Args:
         remote_url: output of ``git remote get-url origin`` (may be empty).
     """
-    # TODO: return "owner/repo" for both the HTTPS and SSH forms shown above.
-    #       Strip any trailing ".git". Return "" if not a github.com URL.
-    raise NotImplementedError("Phase 0: implement parse_repo_slug()")
+    if not isinstance(remote_url, str):
+        return ""
+    remote_url = remote_url.strip()
+    if any(char.isspace() for char in remote_url) or "?" in remote_url or "#" in remote_url:
+        return ""
+    if remote_url.startswith("git@github.com:"):
+        path = remote_url[len("git@github.com:"):]
+    else:
+        try:
+            url = urlsplit(remote_url)
+            if (url.hostname != "github.com" or url.query or url.fragment
+                    or url.password or url.port not in (None, 22, 443)):
+                return ""
+            if url.scheme == "https" and url.username is None and url.port in (None, 443):
+                path = url.path.removeprefix("/")
+            elif url.scheme == "ssh" and url.username == "git" and url.port in (None, 22):
+                path = url.path.removeprefix("/")
+            else:
+                return ""
+        except ValueError:
+            return ""
+    path = path.removesuffix("/").removesuffix(".git")
+    if not re.fullmatch(r"[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?/[A-Za-z0-9_.-]+", path):
+        return ""
+    if path.split("/")[1] in (".", ".."):
+        return ""
+    return path
 
 
 # --------------------------------------------------------------------------- #
