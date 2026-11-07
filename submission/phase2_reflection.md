@@ -26,8 +26,14 @@ The naive implementation executes many small dot products inside Python loops, p
 
 **Where the thread curve flattens, and why.**
 
-<!--answer:threading_plateau-->
-The best time occurred at 2 threads (2215.067 ms/step), compared with 2482.223 ms at 1 thread. Adding threads beyond 2 hurt performance: 2402.338 ms at 4 threads and 2525.244 ms at 8. PyTorch's intra-op workers must share the Colab CPU allocation, caches, memory bandwidth, and synchronization resources. When there are more runnable workers than the effective hardware can use profitably, scheduling and contention outweigh parallel work. The saved notebook does not record the runtime's exact vCPU allocation; this should be checked rather than inferred from the timings alone.
+<!--answer:threading_plateau-->The best result was with 2 threads (2215.067 ms/step), compared to
+2482.223 ms with 1 thread. I checked my Colab runtime using nproc,
+which reported 2 logical CPUs. This is consistent with the slowdown
+at 4 threads (2402.338 ms) and 8 threads (2525.244 ms).
+Beyond 2 threads, workers likely compete for CPU time, cache and
+memory bandwidth, while scheduling and synchronization add overhead.
+Since I checked the CPU count in a new Colab session, I cannot
+confirm that the original benchmark had exactly the same allocation.
 <!--/answer-->
 
 **What made the GPU faster.**
