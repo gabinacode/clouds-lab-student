@@ -1,0 +1,30 @@
+{
+  "phase": "2",
+  "environment": {
+    "colab": true
+  },
+  "attention": {
+    "naive_ms": 480.07,
+    "vectorized_ms": 1.09,
+    "speedup": 438.8
+  },
+  "threads": {
+    "1": 2482.223,
+    "2": 2215.067,
+    "4": 2402.338,
+    "8": 2525.244
+  },
+  "devices": {
+    "cpu_ms": 449765.0,
+    "gpu_ms": 15892.0
+  },
+  "training": {
+    "steps": 2000,
+    "final_loss": 1.436,
+    "param_count": 4935680
+  },
+  "sample": "\nRhaim lord, in to my plature; and sive, and you,\npassish, for gidling aman, and him horing\n he condry pluck it,\nWhill Gause force, this Warwick! the dead fell'd\nWhat in them, is thou dear; officens we\n",
+  "model": {
+    "gcs_url": "https://storage.googleapis.com/project-80ae182a-7f1d-4d03-927-eurecomgpt/model.safetensors"
+  }
+}
